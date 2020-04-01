@@ -59,9 +59,6 @@ void createData()
             fout_I << I <<std::endl;
             fout_S << S <<std::endl;
             fout_R << (R = (Prec * I)) <<std::endl;
-//            std::cout<< I <<std::endl;
-//            std::cout<< S <<std::endl;
-//            std::cout<< (R = int(Prec * I)) <<std::endl;
         }
         //关闭文件
         fout_I.close();
@@ -87,24 +84,28 @@ void getRes()
     }
     else
     {
+        std::string line;       //读取的字符串
+        
+        int data_amount = 0;    //数据行数
+        while(getline(fin_I,line))  //计算数据行数
+        {
+            data_amount++;
+        }
+        fin_I.clear();      //因为读到了文件尾部clear()一下
+        fin_I.seekg(0);     //回到文件头
+        
         //建立感染人数矩阵
-        Eigen::MatrixXd I_mat;
-        I_mat.resize(100, 1);
+        Eigen::MatrixXd I_mat(data_amount, 1);
         
         //建立易感染人数矩阵
-        Eigen::MatrixXd S_mat;
-        S_mat.resize(100, 1);
+        Eigen::MatrixXd S_mat(data_amount, 1);
         
         //建立治愈人数矩阵
-        Eigen::MatrixXd R_mat;
-        R_mat.resize(100, 1);
-        
-        std::string line;
+        Eigen::MatrixXd R_mat(data_amount, 1);
         
         //读入感染人数数据
-        for(int i = 0;i < 100; i++)
+        for(int i = 0;i < data_amount; i++)
         {
-            //std::cout<<line<<std::endl;
             if(getline(fin_I,line))
             {
                 I_mat(i,0) = atof(const_cast<const char *>(line.c_str()));;
@@ -112,9 +113,8 @@ void getRes()
         }
         
         //读入易感染人数数据
-        for(int i = 0;i < 100; i++)
+        for(int i = 0;i < data_amount; i++)
         {
-            //std::cout<<line<<std::endl;
             if(getline(fin_S,line))
             {
                 S_mat(i,0) = atof(const_cast<const char *>(line.c_str()));
@@ -122,9 +122,8 @@ void getRes()
         }
         
         //读入治愈数据
-        for(int i = 0;i < 100; i++)
+        for(int i = 0;i < data_amount; i++)
         {
-            //std::cout<<line<<std::endl;
             if(getline(fin_R,line))
             {
                 R_mat(i,0) = atof(const_cast<const char *>(line.c_str()));
@@ -137,46 +136,34 @@ void getRes()
         fin_R.close();
 
         //建立(I / (I+S) * S)矩阵
-        Eigen::MatrixXd I_I_S_S;
-        I_I_S_S.resize(100, 1);
+        Eigen::MatrixXd I_I_S_S(data_amount,1);
         I_I_S_S = (1.0 / (I_mat.array() + S_mat.array())) * I_mat.array() * S_mat.array();
-        //std::cout<< I_I_S <<std::endl;
         
         //建立I(n+1)矩阵
-        Eigen::MatrixXd In_1;
-        In_1.resize(100,1);
+        Eigen::MatrixXd In_1(data_amount, 1);
         In_1=I_mat;
-        for(int i = 0;i < 99; i++)
+        for(int i = 0;i < data_amount - 1; i++)
         {
             In_1(i,0) = In_1(i + 1,0);
         }
         
         //建立I(n+1)-I(n)矩阵
-        Eigen::MatrixXd In_1_In;
-        In_1_In.resize(100,1);
+        Eigen::MatrixXd In_1_In(data_amount, 1);
         In_1_In =In_1 - I_mat;
 
         //合并矩阵 I/(I+S)*S 和 I_mat
-        Eigen::MatrixXd Combin;
-        Combin.resize(100,2);
+        Eigen::MatrixXd Combin(data_amount, 2);
         Combin<<I_I_S_S,I_mat;
-        //std::cout<<Combin<<std::endl;
         
         //建立结果矩阵
-        Eigen::MatrixXd res;
-        res.resize(2,1);
-        //std::cout<< res <<std::endl;
+        Eigen::MatrixXd res(2,1);
         
         //解超定方程
         res = Combin.fullPivLu().solve(In_1_In);
+        
+        //显示结果
         std::cout<< "P_contact * P_spread: " << res(0,0) <<std::endl;
         std::cout<< "P_recover: " << -res(1,0) <<std::endl;
-        std::cout<< "R0 :" << -res(0,0) / res(1,0) <<std::endl;
-
-//        std::cout<<I_mat<<std::endl;
-//        std::cout<<S_mat<<std::endl;
-//        std::cout<<R_mat<<std::endl;
-//        std::cout<< "------------------" <<std::endl;
-//        std::cout<<S_mat + I_mat + R_mat<<std::endl;
+        std::cout<< "R0: " << -res(0,0) / res(1,0) <<std::endl;
     }
 }
