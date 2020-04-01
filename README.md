@@ -16,3 +16,4 @@ Variable Pspr is the probability to spread the novel coronavirus when people are
 Variable Prec is the probability to recover.  
 Variable iter is number of iterations which means the time of the model.  
 
+PS:If you use Xcode, you can open the SIR.xcodeproj directly. If not, you can open SIR document, all of source is in it.
