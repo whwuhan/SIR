@@ -12,7 +12,7 @@ Variable S is the initial number of people who are susceptible.
 Variable N is the amount of the people.  
 Variable R is the initial number of people who are cured.  
 Variable Pcon is the probability to contact others.  
-Variable Pspr is the probability to spread the novel coronavirus when people are contated with each other.  
+Variable Pspr is the probability to spread the novel coronavirus when people are contacted with each other.  
 Variable Prec is the probability to recover.  
 Variable iter is number of iterations which means the time of the model.  
 
