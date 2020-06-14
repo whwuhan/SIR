@@ -18,9 +18,9 @@ int main(int argc, const char * argv[]) {
     getRes();           //计算参数和R0
 }
 
-void SIR(double& I, double& S, double& N, double& Pcon, double& Pspr, double& Prec)
+void SIR(double& I, double& S, double& N, double& Pcon, double& Pspr, double& Prec, double& R)
 {
-    double R = (Prec * I);//治愈人数
+    R = (Prec * I);//治愈人数
     I = I + (Pcon * Pspr * (I / N) * S) - R;
     S = N - I - R;
     N = N - R;
@@ -55,10 +55,11 @@ void createData()
         //写入数据
         for(int i = 0;i < iter; i++)
         {
-            SIR(I, S, N, Pcon, Pspr, Prec);
+            
+            SIR(I, S, N, Pcon, Pspr, Prec, R);
+            fout_R << R <<std::endl;
             fout_I << I <<std::endl;
             fout_S << S <<std::endl;
-            fout_R << (R = (Prec * I)) <<std::endl;
         }
         //关闭文件
         fout_I.close();

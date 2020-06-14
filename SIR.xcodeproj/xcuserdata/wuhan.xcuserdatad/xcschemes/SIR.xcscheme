@@ -36,7 +36,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/wuhan/Desktop/cpp_co/SIR/SIR"
+      customWorkingDirectory = "/Users/wuhan/wuhan/&#x4ee3;&#x7801;/CppCode/SIR/SIR"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
