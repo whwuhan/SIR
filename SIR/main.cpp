@@ -10,7 +10,7 @@
 #include <string>
 #include <Eigen/Dense>
 
-void SIR(double&, double&, double&, double&, double&, double&); // SIR模型
+void SIR(double&, double&, double&, double&, double&, double&, double&); // SIR模型
 void createData();      //用SIR模型生成数据
 void getRes();          //求解参数
 int main(int argc, const char * argv[]) {
